@@ -1,0 +1,294 @@
+```html
+<!DOCTYPE html>
+<html lang="{{ 'ta' if lang == 'ta' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'விளைமதி | விளைபொருள் சேர்க்க' if lang == 'ta' else 'VilaiMathi | Add Crop' }}</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: linear-gradient(135deg, #edf6e7, #faf9f0);
+            color: #193b2b;
+            min-height: 100vh;
+        }
+
+        header {
+            background: white;
+            padding: 19px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 3px 18px #173d2510;
+        }
+
+        .brand {
+            color: #176b42;
+            font-size: 25px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .brand span { color: #e2a72e; }
+
+        .language {
+            padding: 10px 12px;
+            border: 1px solid #d5e1d5;
+            border-radius: 10px;
+            background: white;
+        }
+
+        main {
+            max-width: 850px;
+            margin: 35px auto;
+            padding: 0 18px 40px;
+        }
+
+        .heading { margin-bottom: 22px; }
+
+        .heading h1 {
+            color: #185737;
+            font-size: 30px;
+            margin-bottom: 9px;
+        }
+
+        .heading p {
+            color: #68796b;
+            line-height: 1.7;
+        }
+
+        .card {
+            background: white;
+            padding: 30px;
+            border: 1px solid #e3eddf;
+            border-radius: 22px;
+            box-shadow: 0 14px 40px #214d2610;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .field { margin-bottom: 20px; }
+
+        label {
+            display: block;
+            font-weight: 650;
+            margin-bottom: 8px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px;
+            border: 1px solid #d7e2d6;
+            border-radius: 11px;
+            background: white;
+            color: #193b2b;
+            font-size: 15px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid #21804d30;
+            border-color: #21804d;
+        }
+
+        .hint {
+            display: block;
+            font-size: 13px;
+            color: #748276;
+            margin-top: 7px;
+        }
+
+        .message {
+            background: #fff0ef;
+            border: 1px solid #f2ceca;
+            color: #a52d2d;
+            padding: 13px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn {
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+            border: none;
+            border-radius: 11px;
+            padding: 14px 20px;
+            font-size: 15px;
+            font-weight: 750;
+            cursor: pointer;
+        }
+
+        .primary {
+            background: #21804d;
+            color: white;
+            flex: 1;
+        }
+
+        .primary:hover { background: #17643b; }
+
+        .secondary {
+            background: #edf4e9;
+            color: #216541;
+        }
+
+        @media (max-width: 600px) {
+            header { padding: 16px 5%; }
+            .brand { font-size: 21px; }
+            .grid { grid-template-columns: 1fr; gap: 0; }
+            .card { padding: 22px 18px; }
+            .heading h1 { font-size: 25px; }
+            .actions { flex-direction: column; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <a class="brand" href="{{ url_for('dashboard', lang=lang) }}">
+        <span>🌾</span> {{ 'விளைமதி' if lang == 'ta' else 'VilaiMathi' }}
+    </a>
+
+    <select class="language" aria-label="Language"
+            onchange="changeLanguage(this.value)">
+        <option value="en" {% if lang == 'en' %}selected{% endif %}>English</option>
+        <option value="ta" {% if lang == 'ta' %}selected{% endif %}>தமிழ்</option>
+    </select>
+</header>
+
+<main>
+    <div class="heading">
+        <h1>
+            {{ '🌱 புதிய விளைபொருள் சேர்க்கவும்' if lang == 'ta' else '🌱 Add Your Crop' }}
+        </h1>
+        <p>
+            {{ 'உங்கள் விளைபொருள் விவரங்களை உள்ளிடவும். கடை உரிமையாளர்கள் உங்களை நேரடியாகத் தொடர்புகொள்ள இந்த விவரங்கள் உதவும்.' if lang == 'ta' else 'Enter your crop details to help shop owners connect with you directly.' }}
+        </p>
+    </div>
+
+    <section class="card">
+        {% if message %}
+            <div class="message" role="alert">{{ message }}</div>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('add_crop', lang=lang) }}">
+            <div class="grid">
+                <div class="field">
+                    <label for="crop_name">
+                        {{ 'பயிர் / விளைபொருள் பெயர்' if lang == 'ta' else 'Crop / Product Name' }}
+                    </label>
+                    <input id="crop_name" name="crop_name"
+                           maxlength="80" required
+                           placeholder="{{ 'எ.கா. தக்காளி' if lang == 'ta' else 'e.g. Tomato' }}">
+                </div>
+
+                <div class="field">
+                    <label for="category">
+                        {{ 'வகை' if lang == 'ta' else 'Category' }}
+                    </label>
+                    <select id="category" name="category" required>
+                        <option value="">
+                            {{ 'வகையைத் தேர்ந்தெடுக்கவும்' if lang == 'ta' else 'Select category' }}
+                        </option>
+                        <option value="Vegetables">{{ 'காய்கறிகள்' if lang == 'ta' else 'Vegetables' }}</option>
+                        <option value="Fruits">{{ 'பழங்கள்' if lang == 'ta' else 'Fruits' }}</option>
+                        <option value="Grains">{{ 'தானியங்கள்' if lang == 'ta' else 'Grains' }}</option>
+                        <option value="Other">{{ 'மற்றவை' if lang == 'ta' else 'Other' }}</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="quantity">
+                        {{ 'கிடைக்கும் அளவு' if lang == 'ta' else 'Available Quantity' }}
+                    </label>
+                    <input id="quantity" name="quantity" type="number"
+                           min="0.01" step="any" required
+                           placeholder="{{ 'எ.கா. 500' if lang == 'ta' else 'e.g. 500' }}">
+                </div>
+
+                <div class="field">
+                    <label for="unit">
+                        {{ 'அளவீட்டு அலகு' if lang == 'ta' else 'Unit' }}
+                    </label>
+                    <select id="unit" name="unit" required>
+                        <option value="kg">{{ 'கிலோகிராம் (kg)' if lang == 'ta' else 'Kilograms (kg)' }}</option>
+                        <option value="tonne">{{ 'டன் (tonne)' if lang == 'ta' else 'Tonnes' }}</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="expected_price">
+                        {{ 'எதிர்பார்க்கும் விலை (₹ / kg)' if lang == 'ta' else 'Expected Price (₹ / kg)' }}
+                    </label>
+                    <input id="expected_price" name="expected_price"
+                           type="number" min="0.01" step="any" required
+                           placeholder="{{ 'எ.கா. 25' if lang == 'ta' else 'e.g. 25' }}">
+                    <span class="hint">
+                        {{ 'உங்கள் எதிர்பார்க்கும் விலையை உள்ளிடவும்.' if lang == 'ta' else 'Enter your expected selling price.' }}
+                    </span>
+                </div>
+
+                <div class="field">
+                    <label for="quality">
+                        {{ 'தர நிலை' if lang == 'ta' else 'Product Quality' }}
+                    </label>
+                    <select id="quality" name="quality" required>
+                        <option value="Standard">{{ 'சாதாரணம்' if lang == 'ta' else 'Standard' }}</option>
+                        <option value="Good">{{ 'நல்ல தரம்' if lang == 'ta' else 'Good' }}</option>
+                        <option value="Premium">{{ 'உயர்தரம்' if lang == 'ta' else 'Premium' }}</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="harvest_date">
+                        {{ 'அறுவடை தேதி' if lang == 'ta' else 'Harvest Date' }}
+                    </label>
+                    <input id="harvest_date" name="harvest_date"
+                           type="date" min="{{ today }}" required>
+                </div>
+
+                <div class="field">
+                    <label for="location">
+                        {{ 'ஊர் / மாவட்டம்' if lang == 'ta' else 'Village / District' }}
+                    </label>
+                    <input id="location" name="location"
+                           maxlength="120" value="{{ default_location }}" required>
+                </div>
+            </div>
+
+            <div class="actions">
+                <button class="btn primary" type="submit">
+                    {{ 'விளைபொருளைச் சேமிக்கவும்' if lang == 'ta' else 'Save Crop Details' }}
+                </button>
+
+                <a class="btn secondary"
+                   href="{{ url_for('dashboard', lang=lang) }}">
+                    {{ 'திரும்பிச் செல்லவும்' if lang == 'ta' else 'Cancel' }}
+                </a>
+            </div>
+        </form>
+    </section>
+</main>
+
+<script>
+    function changeLanguage(lang) {
+        window.location.href =
+            "{{ url_for('add_crop') }}" + "?lang=" + encodeURIComponent(lang);
+    }
+</script>
+</body>
+</html>
+```

@@ -1,0 +1,258 @@
+
+<!DOCTYPE html>
+<html lang="{{ 'ta' if lang == 'ta' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'விலை ஒப்பீடு - VilaiMathi' if lang == 'ta' else 'Price Comparison - VilaiMathi' }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f8f3;
+            color: #243328;
+        }
+
+        header {
+            background: #176b3a;
+            color: white;
+            padding: 18px 7%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        header h2 {
+            margin: 0;
+        }
+
+        .language a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+            border: 1px solid white;
+            border-radius: 6px;
+            margin-left: 5px;
+        }
+
+        .language a:hover {
+            background: white;
+            color: #176b3a;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .top-link {
+            color: #176b3a;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .filter-box, .crop-card, .notice {
+            background: white;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 12px #0000000d;
+        }
+
+        select, button {
+            padding: 11px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        button {
+            background: #176b3a;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #10542c;
+        }
+
+        .crop-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 18px;
+        }
+
+        .crop-card h3 {
+            color: #176b3a;
+            margin-top: 0;
+        }
+
+        .price {
+            font-size: 24px;
+            color: #176b3a;
+            font-weight: bold;
+        }
+
+        .detail {
+            margin: 10px 0;
+            overflow-wrap: anywhere;
+        }
+
+        .notice {
+            background: #fff8df;
+            border-left: 5px solid #e4b12f;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 35px;
+            background: white;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 16px 5%;
+            }
+
+            .container {
+                width: 92%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h2>🌱 VilaiMathi</h2>
+
+    <div class="language">
+        <a href="{{ url_for('compare_prices', lang='ta', crop=selected_crop) }}">தமிழ்</a>
+        <a href="{{ url_for('compare_prices', lang='en', crop=selected_crop) }}">English</a>
+    </div>
+</header>
+
+<div class="container">
+
+    <a class="top-link" href="{{ url_for('dashboard', lang=lang) }}">
+        {{ '← முகப்புப் பக்கத்திற்குச் செல்ல' if lang == 'ta' else '← Back to Dashboard' }}
+    </a>
+
+    <h1>
+        {{ 'பயிர் விலை ஒப்பீடு' if lang == 'ta' else 'Crop Price Comparison' }}
+    </h1>
+
+    <p>
+        {{ 'விவசாயிகள் பதிவு செய்துள்ள பயிர்களின் எதிர்பார்க்கப்படும் விலைகளை ஒப்பிட்டுப் பாருங்கள்.' if lang == 'ta'
+        else 'Compare expected prices listed by farmers for different crops.' }}
+    </p>
+
+    <div class="filter-box">
+        <form method="GET" action="{{ url_for('compare_prices') }}">
+            <input type="hidden" name="lang" value="{{ lang }}">
+
+            <label for="crop">
+                <strong>{{ 'பயிரைத் தேர்வு செய்க:' if lang == 'ta' else 'Select Crop:' }}</strong>
+            </label>
+
+            <select name="crop" id="crop">
+                <option value="">
+                    {{ 'அனைத்து பயிர்களும்' if lang == 'ta' else 'All Crops' }}
+                </option>
+
+                {% for item in crop_names %}
+                <option value="{{ item['crop_name'] }}"
+                    {% if selected_crop == item['crop_name'] %}selected{% endif %}>
+                    {{ item['crop_name'] }}
+                </option>
+                {% endfor %}
+            </select>
+
+            <button type="submit">
+                {{ 'விலைகளை ஒப்பிடு' if lang == 'ta' else 'Compare Prices' }}
+            </button>
+        </form>
+    </div>
+
+    <div class="notice">
+        <strong>
+            {{ 'குறிப்பு:' if lang == 'ta' else 'Note:' }}
+        </strong>
+
+        {{ 'இவை விவசாயிகள் பதிவு செய்த எதிர்பார்க்கப்படும் விலைகள் மட்டுமே. சரிபார்க்கப்பட்ட சந்தை விலைகள் அல்ல.' if lang == 'ta'
+        else 'These are expected prices entered by farmers, not verified market prices.' }}
+    </div>
+
+    {% if crops %}
+    <div class="crop-grid">
+
+        {% for crop in crops %}
+        <div class="crop-card">
+
+            <h3>🌾 {{ crop['crop_name'] }}</h3>
+
+            <div class="price">
+                ₹{{ crop['expected_price'] }}
+                <span style="font-size:14px;">
+                    {{ '/ கிலோ' if lang == 'ta' else '/ kg' }}
+                </span>
+            </div>
+
+            <div class="detail">
+                <strong>{{ 'விவசாயி:' if lang == 'ta' else 'Farmer:' }}</strong>
+                {{ crop['farmer_name'] }}
+            </div>
+
+            <div class="detail">
+                <strong>{{ 'அளவு:' if lang == 'ta' else 'Quantity:' }}</strong>
+                {{ crop['quantity'] }} {{ crop['unit'] }}
+            </div>
+
+            <div class="detail">
+                <strong>{{ 'தரம்:' if lang == 'ta' else 'Quality:' }}</strong>
+                {{ crop['quality'] or ('குறிப்பிடப்படவில்லை' if lang == 'ta' else 'Not specified') }}
+            </div>
+
+            <div class="detail">
+                <strong>{{ 'இடம்:' if lang == 'ta' else 'Location:' }}</strong>
+                {{ crop['location'] or ('குறிப்பிடப்படவில்லை' if lang == 'ta' else 'Not specified') }}
+            </div>
+
+            <div class="detail">
+                <strong>{{ 'அறுவடை தேதி:' if lang == 'ta' else 'Harvest Date:' }}</strong>
+                {{ crop['harvest_date'] or ('குறிப்பிடப்படவில்லை' if lang == 'ta' else 'Not specified') }}
+            </div>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+    {% else %}
+    <div class="empty">
+        <h3>
+            {{ 'பயிர் விவரங்கள் எதுவும் கிடைக்கவில்லை' if lang == 'ta' else 'No Crop Listings Found' }}
+        </h3>
+
+        <p>
+            {{ 'இந்தப் பயிருக்கு விவரங்கள் இல்லை. வேறு பயிரைத் தேர்வு செய்யவும்.' if lang == 'ta'
+            else 'No listings are available for this crop. Try selecting another crop.' }}
+        </p>
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,350 @@
+
+<!DOCTYPE html>
+<html lang="{{ 'ta' if lang == 'ta' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'விளைமதி | உங்கள் பக்கம்' if lang == 'ta' else 'VilaiMathi | Dashboard' }}</title>
+
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background: #f5f8f0;
+            color: #193b2b;
+        }
+
+        header {
+            background: white;
+            padding: 19px 7%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            box-shadow: 0 3px 18px #173d2510;
+        }
+
+        .brand {
+            color: #176b42;
+            font-size: 25px;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .brand span { color: #e2a72e; }
+
+        .logout {
+            padding: 11px 17px;
+            background: #21804d;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: 700;
+        }
+
+        main {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .welcome {
+            padding: 35px;
+            border-radius: 22px;
+            background: linear-gradient(135deg, #e5f3d9, #f8f5df);
+        }
+
+        .welcome h1 {
+            font-size: 32px;
+            color: #185737;
+            margin-bottom: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .welcome p {
+            line-height: 1.8;
+            color: #53675b;
+        }
+
+        .profile, .coming, .crop-section {
+            background: white;
+            margin-top: 25px;
+            padding: 28px;
+            border-radius: 18px;
+            border: 1px solid #e3eddf;
+        }
+
+        .profile h2, .coming h2, .crop-section h2 {
+            color: #185737;
+            margin-bottom: 18px;
+        }
+
+        .detail {
+            padding: 13px 0;
+            border-bottom: 1px solid #edf1ea;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .detail:last-child { border-bottom: none; }
+
+        .label {
+            color: #6a7a6d;
+            font-weight: 600;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 18px;
+        }
+
+        .section-heading h2 { margin-bottom: 0; }
+
+        .add-button {
+            display: inline-block;
+            background: #21804d;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        .add-button:hover, .logout:hover {
+            background: #17643b;
+        }
+
+        .notice {
+            padding: 14px 17px;
+            margin-bottom: 18px;
+            border-radius: 10px;
+            line-height: 1.6;
+        }
+
+        .success {
+            background: #e4f7e9;
+            color: #17643b;
+            border: 1px solid #b9e6c5;
+        }
+
+        .error {
+            background: #fff0ed;
+            color: #a33325;
+            border: 1px solid #f1c6bf;
+        }
+
+        .crop-card {
+            border: 1px solid #e3eddf;
+            border-radius: 14px;
+            padding: 20px;
+            margin-top: 15px;
+            background: #fcfdf9;
+        }
+
+        .crop-card h3 {
+            color: #176b42;
+            font-size: 21px;
+            margin-bottom: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .crop-info {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+        }
+
+        .crop-info div {
+            background: white;
+            padding: 12px;
+            border-radius: 9px;
+            border: 1px solid #edf1ea;
+            line-height: 1.6;
+            overflow-wrap: anywhere;
+        }
+
+        .crop-info strong {
+            display: block;
+            color: #65776a;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .price {
+            color: #176b42;
+            font-size: 19px;
+            font-weight: 800;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 25px 10px;
+            color: #637468;
+            line-height: 1.8;
+        }
+
+        .coming p {
+            line-height: 1.8;
+            color: #637468;
+        }
+
+        @media(max-width: 550px) {
+            header { padding: 16px 5%; }
+            .brand { font-size: 21px; }
+            .welcome { padding: 25px; }
+            .welcome h1 { font-size: 26px; }
+            .profile, .coming, .crop-section { padding: 20px; }
+            .crop-info { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <a class="brand" href="{{ url_for('home', lang=lang) }}">
+        <span>🌾</span>
+        {{ 'விளைமதி' if lang == 'ta' else 'VilaiMathi' }}
+    </a>
+
+    <a class="logout" href="{{ url_for('logout', lang=lang) }}">
+        {{ 'வெளியேறு' if lang == 'ta' else 'Logout' }}
+    </a>
+</header>
+
+<main>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}
+            <div class="notice {{ 'success' if category == 'success' else 'error' }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endwith %}
+
+    <section class="welcome">
+        <h1>
+            {{ 'வணக்கம், ' ~ user['name'] ~ '!' if lang == 'ta' else 'Welcome, ' ~ user['name'] ~ '!' }}
+        </h1>
+
+        <p>
+            {{ 'விளைமதி தளத்திற்கு வரவேற்கிறோம். உங்கள் கணக்கு வெற்றிகரமாக உள்நுழைந்துள்ளது.' if lang == 'ta' else 'Welcome to VilaiMathi. You have successfully logged in to your account.' }}
+        </p>
+    </section>
+
+    <section class="profile">
+        <h2>
+            {{ 'உங்கள் கணக்கு விவரங்கள்' if lang == 'ta' else 'Your Account Details' }}
+        </h2>
+
+        <div class="detail">
+            <span class="label">{{ 'பெயர்' if lang == 'ta' else 'Name' }}:</span>
+            {{ user['name'] }}
+        </div>
+
+        <div class="detail">
+            <span class="label">{{ 'மொபைல் எண்' if lang == 'ta' else 'Mobile Number' }}:</span>
+            {{ user['mobile'] }}
+        </div>
+
+        <div class="detail">
+            <span class="label">{{ 'ஊர் / மாவட்டம்' if lang == 'ta' else 'Village / District' }}:</span>
+            {{ user['location'] }}
+        </div>
+
+        <div class="detail">
+            <span class="label">{{ 'கணக்கு வகை' if lang == 'ta' else 'Account Type' }}:</span>
+            {{ ('விவசாயி' if user['role'] == 'farmer' else 'வாங்குபவர்') if lang == 'ta' else ('Farmer' if user['role'] == 'farmer' else 'Buyer') }}
+        </div>
+    </section>
+
+    {% if user['role'] == 'farmer' %}
+
+        <section class="crop-section">
+            <div class="section-heading">
+                <h2>
+                    {{ 'எனது விளைபொருட்கள்' if lang == 'ta' else 'My Crop Listings' }}
+                </h2>
+
+                <a class="add-button"
+                   href="{{ url_for('add_crop', lang=lang) }}">
+                    {{ '+ விளைபொருள் சேர்க்க' if lang == 'ta' else '+ Add New Crop' }}
+                </a>
+            </div>
+
+            {% if crops %}
+                <p>
+                    {{ 'நீங்கள் பதிவு செய்த விளைபொருட்கள் கீழே உள்ளன.' if lang == 'ta' else 'Here are the crops you have listed on VilaiMathi.' }}
+                </p>
+
+                {% for crop in crops %}
+                    <article class="crop-card">
+                        <h3>{{ crop['crop_name'] }}</h3>
+
+                        <div class="crop-info">
+                            <div>
+                                <strong>{{ 'வகை' if lang == 'ta' else 'Category' }}</strong>
+                                {{ crop['category'] }}
+                            </div>
+
+                            <div>
+                                <strong>{{ 'அளவு' if lang == 'ta' else 'Quantity' }}</strong>
+                                {{ crop['quantity'] }} {{ crop['unit'] }}
+                            </div>
+
+                            <div>
+                                <strong>{{ 'எதிர்பார்க்கும் விலை' if lang == 'ta' else 'Expected Price' }}</strong>
+                                <span class="price">₹{{ "%.2f"|format(crop['expected_price']) }}</span>
+                                <span>{{ ' / கிலோ' if lang == 'ta' else ' / kg' }}</span>
+                            </div>
+
+                            <div>
+                                <strong>{{ 'தரம்' if lang == 'ta' else 'Quality' }}</strong>
+                                {{ crop['quality'] }}
+                            </div>
+
+                            <div>
+                                <strong>{{ 'அறுவடை தேதி' if lang == 'ta' else 'Harvest Date' }}</strong>
+                                {{ crop['harvest_date'] }}
+                            </div>
+
+                            <div>
+                                <strong>{{ 'இடம்' if lang == 'ta' else 'Location' }}</strong>
+                                {{ crop['location'] }}
+                            </div>
+                        </div>
+                    </article>
+                {% endfor %}
+
+            {% else %}
+                <div class="empty">
+                    <p>
+                        {{ 'இன்னும் எந்த விளைபொருளும் சேர்க்கப்படவில்லை.' if lang == 'ta' else 'You have not added any crops yet.' }}
+                    </p>
+                    <p>
+                        {{ 'உங்கள் முதல் விளைபொருளைப் பதிவு செய்ய மேலே உள்ள பொத்தானை அழுத்தவும்.' if lang == 'ta' else 'Use the button above to add your first crop listing.' }}
+                    </p>
+                </div>
+            {% endif %}
+        </section>
+
+    {% else %}
+
+        <section class="coming">
+            <h2>
+                {{ 'வாங்குபவர் வசதிகள்' if lang == 'ta' else 'Buyer Features' }}
+            </h2>
+            <p>
+                {{ 'விவசாயிகளின் விளைபொருட்களைப் பார்ப்பது, விலைகளை ஒப்பிடுவது மற்றும் நேரடியாகத் தொடர்புகொள்வது போன்ற வசதிகள் அடுத்த கட்டத்தில் சேர்க்கப்படும்.' if lang == 'ta' else 'Browsing crop listings, comparing prices, and contacting farmers directly will be added in the next development step.' }}
+            </p>
+        </section>
+
+    {% endif %}
+
+</main>
+</body>
+</html>

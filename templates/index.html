@@ -1,0 +1,373 @@
+
+<!DOCTYPE html>
+<html lang="{{ 'ta' if lang == 'ta' else 'en' }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'விளைமதி | விவசாயிகளுக்கான சந்தை' if lang == 'ta' else 'VilaiMathi | Farmer Marketplace' }}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            color: #18352a;
+            background: #f5f8f0;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            padding: 20px 7%;
+            background: #fff;
+            box-shadow: 0 3px 18px #173d2510;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: 800;
+            color: #176b42;
+            text-decoration: none;
+        }
+
+        .brand span {
+            color: #e2a72e;
+        }
+
+        .language {
+            padding: 10px 12px;
+            border: 1px solid #d5e1d5;
+            border-radius: 10px;
+            background: white;
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .hero {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            align-items: center;
+            gap: 40px;
+            padding: 75px 8%;
+            background: linear-gradient(135deg, #e9f5df, #f9f8e9);
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 8px 14px;
+            border-radius: 30px;
+            background: #d7edcf;
+            color: #286b38;
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: clamp(34px, 4.5vw, 55px);
+            line-height: 1.2;
+            margin-bottom: 20px;
+            color: #174d32;
+        }
+
+        .description {
+            font-size: 17px;
+            line-height: 1.8;
+            color: #53675b;
+            max-width: 580px;
+            margin-bottom: 28px;
+        }
+
+        .actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 13px;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 14px 22px;
+            border-radius: 11px;
+            text-decoration: none;
+            font-weight: 700;
+            transition: 0.2s;
+            text-align: center;
+        }
+
+        .btn-primary {
+            color: white;
+            background: #21804d;
+        }
+
+        .btn-primary:hover {
+            background: #17643b;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            color: #216541;
+            border: 1px solid #a8c8ac;
+            background: white;
+        }
+
+        .btn-secondary:hover {
+            background: #edf6e9;
+            transform: translateY(-2px);
+        }
+
+        .visual {
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 30px;
+            border-radius: 30px;
+            background: linear-gradient(145deg, #cce8b8, #f5e9b9);
+            box-shadow: 0 18px 45px #315d2415;
+        }
+
+        .visual .emoji {
+            font-size: 80px;
+            margin-bottom: 20px;
+        }
+
+        .visual h2 {
+            color: #235b36;
+            font-size: 25px;
+            margin-bottom: 10px;
+        }
+
+        .visual p {
+            color: #4d6a4f;
+            line-height: 1.7;
+        }
+
+        .features {
+            padding: 55px 8% 70px;
+            text-align: center;
+        }
+
+        .features h2 {
+            font-size: 30px;
+            color: #174d32;
+            margin-bottom: 12px;
+        }
+
+        .features-intro {
+            color: #637468;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            text-align: left;
+        }
+
+        .feature-card {
+            padding: 26px;
+            border-radius: 18px;
+            background: white;
+            border: 1px solid #e6eee3;
+            box-shadow: 0 8px 25px #193c1b08;
+            transition: 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px #193c1b12;
+        }
+
+        .feature-card .icon {
+            font-size: 34px;
+        }
+
+        .feature-card h3 {
+            margin: 14px 0 9px;
+            color: #215c3b;
+        }
+
+        .feature-card p {
+            color: #637468;
+            line-height: 1.7;
+        }
+
+        footer {
+            padding: 22px;
+            text-align: center;
+            color: #64766a;
+            background: white;
+            border-top: 1px solid #e5ede3;
+            line-height: 1.7;
+        }
+
+        @media (max-width: 760px) {
+            header {
+                padding: 17px 5%;
+            }
+
+            .brand {
+                font-size: 21px;
+            }
+
+            .hero {
+                grid-template-columns: 1fr;
+                padding: 45px 6%;
+            }
+
+            .visual {
+                min-height: 240px;
+            }
+
+            .visual .emoji {
+                font-size: 65px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .features {
+                padding: 40px 6%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <a class="brand" href="{{ url_for('home', lang=lang) }}">
+        <span>🌾</span>
+        {{ 'விளைமதி' if lang == 'ta' else 'VilaiMathi' }}
+    </a>
+
+    <select class="language"
+            aria-label="Select language"
+            onchange="changeLanguage(this.value)">
+        <option value="en" {% if lang == 'en' %}selected{% endif %}>
+            English
+        </option>
+        <option value="ta" {% if lang == 'ta' %}selected{% endif %}>
+            தமிழ்
+        </option>
+    </select>
+</header>
+
+<main>
+    <section class="hero">
+        <div>
+            <div class="tag">
+                {{ '🌱 விவசாயிகளுக்கான டிஜிட்டல் சந்தை' if lang == 'ta' else '🌱 A Digital Marketplace for Farmers' }}
+            </div>
+
+            <h1>
+                {{ 'உங்கள் விளைபொருளுக்கு சிறந்த விலையைத் தேடுங்கள்' if lang == 'ta' else 'Find Better Prices for Your Harvest' }}
+            </h1>
+
+            <p class="description">
+                {{ 'விவசாயிகளும் வாங்குபவர்களும் எளிதாக இணைந்து, விளைபொருட்களின் விவரங்களைப் பகிர்ந்து, நம்பிக்கையுடன் வணிகம் செய்ய உதவும் தளம்.' if lang == 'ta' else 'A simple platform where farmers and buyers can connect, explore crop listings, and make more informed trading decisions.' }}
+            </p>
+
+            <div class="actions">
+                <a class="btn btn-primary"
+                   href="{{ url_for('register', lang=lang) }}">
+                    {{ 'இப்போதே இணையுங்கள்' if lang == 'ta' else 'Get Started' }}
+                </a>
+
+                <a class="btn btn-secondary"
+                   href="{{ url_for('register', lang=lang) }}">
+                    {{ 'கணக்கை உருவாக்கவும்' if lang == 'ta' else 'Create Account' }}
+                </a>
+
+                <a class="btn btn-secondary"
+                   href="{{ url_for('login', lang=lang) }}">
+                    {{ 'உள்நுழையவும்' if lang == 'ta' else 'Login' }}
+                </a>
+            </div>
+        </div>
+
+        <div class="visual">
+            <div class="emoji">🌾 🧑‍🌾</div>
+
+            <h2>
+                {{ 'விவசாயம் வளம் பெறட்டும்!' if lang == 'ta' else 'Growing Together!' }}
+            </h2>
+
+            <p>
+                {{ 'விவசாயிகளையும் வாங்குபவர்களையும் ஒரே இடத்தில் இணைப்போம்.' if lang == 'ta' else 'Bringing farmers and buyers together in one place.' }}
+            </p>
+        </div>
+    </section>
+
+    <section class="features">
+        <h2>
+            {{ 'விளைமதியின் சிறப்பம்சங்கள்' if lang == 'ta' else 'Why VilaiMathi?' }}
+        </h2>
+
+        <p class="features-intro">
+            {{ 'எளிமையானது, பயனுள்ளது, விவசாயிகளுக்கு ஏற்றது.' if lang == 'ta' else 'Simple, useful, and designed with farmers in mind.' }}
+        </p>
+
+        <div class="feature-grid">
+            <article class="feature-card">
+                <div class="icon">🤝</div>
+
+                <h3>
+                    {{ 'நேரடி இணைப்பு' if lang == 'ta' else 'Direct Connection' }}
+                </h3>
+
+                <p>
+                    {{ 'விவசாயிகளும் வாங்குபவர்களும் ஒருவரையொருவர் எளிதாகக் கண்டறியலாம்.' if lang == 'ta' else 'Help farmers and buyers find and connect with each other.' }}
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="icon">💰</div>
+
+                <h3>
+                    {{ 'விலைத் தகவல்' if lang == 'ta' else 'Price Awareness' }}
+                </h3>
+
+                <p>
+                    {{ 'விளைபொருட்களின் விலையை அறிந்து சிறந்த முடிவுகளை எடுக்க உதவும்.' if lang == 'ta' else 'Make more informed decisions with crop and price information.' }}
+                </p>
+            </article>
+
+            <article class="feature-card">
+                <div class="icon">🛡️</div>
+
+                <h3>
+                    {{ 'பாதுகாப்பான பதிவு' if lang == 'ta' else 'Safer Registration' }}
+                </h3>
+
+                <p>
+                    {{ 'கணக்கு உருவாக்கும்போது உள்ளீட்டுச் சரிபார்ப்பும் கடவுச்சொல் பாதுகாப்பும் பயன்படுத்தப்படுகின்றன.' if lang == 'ta' else 'Registration uses input validation and securely hashed passwords.' }}
+                </p>
+            </article>
+        </div>
+    </section>
+</main>
+
+<footer>
+    {{ '🌾 விளைமதி — விவசாயத்தின் வளர்ச்சிக்காக.' if lang == 'ta' else '🌾 VilaiMathi — Supporting a better farming marketplace.' }}
+</footer>
+
+<script>
+    function changeLanguage(lang) {
+        window.location.href = "/?lang=" + encodeURIComponent(lang);
+    }
+</script>
+
+</body>
+</html>
